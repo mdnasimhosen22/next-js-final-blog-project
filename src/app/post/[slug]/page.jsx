@@ -7,6 +7,7 @@ export default async function PostPage({ params }) {
   try {
     const result = await fetch(process.env.URL + '/api/post/get', {
       method: 'POST',
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug: params.slug }),
       cache: 'no-store',
     });
@@ -15,7 +16,7 @@ export default async function PostPage({ params }) {
   } catch (error) {
     post = { title: 'Failed to load post' };
   }
-  if (!post || !post.title === 'Failed to load post') {
+  if (!post || post.title === 'Failed to load post') {
     return (
       <main className='p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
         <h2 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl'>
