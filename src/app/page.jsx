@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import CallToAction from './components/CallToAction';
 import RecentPosts from './components/RecentPosts';
@@ -11,6 +12,7 @@ export default async function Home() {
       cache: 'no-store',
     });
     const data = await result.json();
+    console.log("jfkjjlgkjg",data)
     posts = data.posts;
   } catch (error) {
     console.log('Error getting post:', error);
