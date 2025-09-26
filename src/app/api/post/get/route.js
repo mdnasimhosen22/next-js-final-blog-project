@@ -12,37 +12,38 @@ export const POST = async (req) => {
     const startIndex = parseInt(data.startIndex) || 0;
     const limit = parseInt(data.limit) || 9;
     const sortDirection = data.order === "asc" ? 1 : -1;
-    // const posts = await Post.find({
-    //   ...(data.userId && { userId: data.userId }),
-    //   ...(data.category &&
-    //     data.category !== "null" &&
-    //     data.category !== "undefined" && { category: data.category }),
-    //   ...(data.slug && { slug: data.slug }),
-    //   ...(data.postId && { _id: data.postId }),
-    //   ...(data.searchTerm && {
-    //     $or: [
-    //       { title: { $regex: data.searchTerm, $options: "i" } },
-    //       { content: { $regex: data.searchTerm, $options: "i" } },
-    //     ],
-    //   }),
-    // })
-    //   .sort({ updatedAt: sortDirection })
-    //   .skip(startIndex)
-    //   .limit(limit);
-    const posts = await Post.find();
-    const totalPosts = await Post.countDocuments();
+    const posts = await Post.find({
+      ...(data.userId && { userId: data.userId }),
+      ...(data.category &&
+        data.category !== "null" &&
+        data.category !== "undefined" && { category: data.category }),
+      ...(data.slug && { slug: data.slug }),
+      ...(data.postId && { _id: data.postId }),
+      ...(data.searchTerm && {
+        $or: [
+          { title: { $regex: data.searchTerm, $options: "i" } },
+          { content: { $regex: data.searchTerm, $options: "i" } },
+        ],
+      }),
+    })
+      .sort({ updatedAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
 
-    const now = new Date();
+    // const posts = await Post.find();
+    // const totalPosts = await Post.countDocuments();
 
-    const oneMonthAgo = new Date(
-      now.getFullYear(),
-      now.getMonth() - 1,
-      now.getDate()
-    );
+    // const now = new Date();
 
-    const lastMonthPosts = await Post.countDocuments({
-      createdAt: { $gte: oneMonthAgo },
-    });
+    // const oneMonthAgo = new Date(
+    //   now.getFullYear(),
+    //   now.getMonth() - 1,
+    //   now.getDate()
+    // );
+
+    // const lastMonthPosts = await Post.countDocuments({
+    //   createdAt: { $gte: oneMonthAgo },
+    // });
 
     // return NextResponse(JSON.stringify({ posts, totalPosts, lastMonthPosts }), {
     //   status: 200,

@@ -114,7 +114,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { createOrUpdateUser, deleteUser } from "@/lib/actions/user";
 import { clerkClient } from "@clerk/nextjs/server";
-import { connect } from "mongoose";
+import { connect } from "../../../lib/mongodb/mongoose";
 
 export async function POST(req) {
   console.log("=== WEBHOOK CALLED ===");
@@ -141,6 +141,12 @@ export async function POST(req) {
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
+  // siv-id log kora holo
+  console.log("Incoming svix headers:", {
+    "svix-id": svix_id,
+    "svix-timestamp": svix_timestamp,
+    "svix-signature": svix_signature,
+  });
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
@@ -178,7 +184,7 @@ export async function POST(req) {
   const { id } = evt?.data;
   const eventType = evt?.type;
   console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
-  console.log("Webhook body:", body);
+  console.log("Webhook body:", evt); //body
 
   if (eventType === "user.created" || eventType === "user.updated") {
     const { id, first_name, last_name, image_url, email_addresses, username } =
